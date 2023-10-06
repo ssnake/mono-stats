@@ -6,3 +6,4 @@ ruby '3.1.2'
 
 gem 'monobank'
 gem 'dotenv'
+gem "debug", "~> 1.8"
