@@ -1,9 +1,18 @@
 # frozen_string_literal: true
 
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-ruby '3.1.2'
+# Specify your gem's dependencies in mono-stats.gemspec
+gemspec
 
-gem 'monobank'
-gem 'dotenv'
-gem "debug", "~> 1.8"
+gem "rake", "~> 13.0"
+
+gem "rspec", "~> 3.0"
+
+gem "vcr", "~> 6.2"
+
+gem "rdbg", "~> 0.1.0"
+
+gem "dotenv", "~> 2.8"
+
+gem "webmock", "~> 3.19"
