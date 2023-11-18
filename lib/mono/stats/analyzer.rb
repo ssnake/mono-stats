@@ -16,16 +16,24 @@ module Mono
           next if item.nil?
           
           statement = Decorator::Monobank.new(item:)
+          
+          next unless columns.include?(statement.column)
 
           result[statement.category] ||= {}
-          
-          columns.each do |column|
-            result[statement.category][column] = 0.0 if result[statement.category][column].nil?
-          end
-          
-          result[statement.category][statement.column] = 0.0 if  result[statement.category][statement.column].nil?
+          result[statement.category][statement.subcategory] ||= {}
+          subcategory = result[statement.category][statement.subcategory]
 
-          result[statement.category][statement.column] += statement.amount
+          columns.each do |column|
+            subcategory[column] ||= {"deb" => 0.0, "cred" => 0.0} 
+          end
+
+          if statement.amount > 0.0 
+            subcategory[statement.column]["deb"] += statement.amount 
+          else
+            subcategory[statement.column]["cred"] += statement.amount 
+          end
+
+          
         rescue StandardError => e
           puts "#{e.message}\nItem caused error:\n#{item.inspect}"
         end

@@ -4,10 +4,40 @@ RSpec.describe Mono::Stats::Analyzer do
   let(:analyzer) { described_class.new(statements: statements) }
 
   describe '#analyze' do
-    subject { analyzer.analyze(columns: ["01", "02", "10", "11"]) }
+    subject { analyzer.analyze(columns: ["01", "02", "06", "10", "11"]) }
 
     let(:statements) {
       [
+        {
+          "id"=>"hkRy7QO9jwiZ8L-W",
+          "time"=>1687262119,
+          "description"=>"Preply",
+          "mcc"=>5818,
+          "originalMcc"=>5818,
+          "amount"=>-557461,
+          "operationAmount"=>-13524,
+          "currencyCode"=>978,
+          "commissionRate"=>0,
+          "cashbackAmount"=>0,
+          "balance"=>728891,
+          "hold"=>false,
+          "receiptId"=>"AB6P-9B0T-BKCP-BPHT"
+        },
+        {
+          "id"=>"hkRy7QO9jwiZ8L-W",
+          "time"=>1687262119,
+          "description"=>"Preply2",
+          "mcc"=>5818,
+          "originalMcc"=>5818,
+          "amount"=>-557461,
+          "operationAmount"=>-13524,
+          "currencyCode"=>978,
+          "commissionRate"=>0,
+          "cashbackAmount"=>0,
+          "balance"=>728891,
+          "hold"=>false,
+          "receiptId"=>"AB6P-9B0T-BKCP-BPHT"
+        },
         {
           "amount"=>-62413,
           "balance"=>550247,
@@ -68,13 +98,15 @@ RSpec.describe Mono::Stats::Analyzer do
           "receiptId"=>"TMBE-7B22-8TX4-7EEE",
           "time"=>1685884434
         }
+        
       ]
     }
 
     it do
       is_expected.to eq({
-        "Paypal"=> {"01"=>0.0, "02"=>0.0, "10"=>634.13, "11"=>0.0},
-        "Кафе" => {"01"=>0.0, "02"=>0.0, "06"=>178.0, "10"=>378.0, "11"=>0.0}
+       4816 => {"Paypal"=>{"01"=>{"cred"=>0.0, "deb"=>0.0}, "02"=>{"cred"=>0.0, "deb"=>0.0}, "06"=>{"cred"=>0.0, "deb"=>0.0}, "10"=>{"cred"=>-634.13, "deb"=>0.0}, "11"=>{"cred"=>0.0, "deb"=>0.0}}},
+       5812 => {"Кафе"=>{"01"=>{"cred"=>0.0, "deb"=>0.0}, "02"=>{"cred"=>0.0, "deb"=>0.0}, "06"=>{"cred"=>-178.0, "deb"=>0.0}, "10"=>{"cred"=>-378.0, "deb"=>0.0}, "11"=>{"cred"=>0.0, "deb"=>0.0}}},
+       5818 => {"Preply"=>{"01"=>{"cred"=>0.0, "deb"=>0.0}, "02"=>{"cred"=>0.0, "deb"=>0.0}, "06"=>{"cred"=>-5574.61, "deb"=>0.0}, "10"=>{"cred"=>0.0, "deb"=>0.0}, "11"=>{"cred"=>0.0, "deb"=>0.0}}, "Preply2"=>{"01"=>{"cred"=>0.0, "deb"=>0.0}, "02"=>{"cred"=>0.0, "deb"=>0.0}, "06"=>{"cred"=>-5574.61, "deb"=>0.0}, "10"=>{"cred"=>0.0, "deb"=>0.0}, "11"=>{"cred"=>0.0, "deb"=>0.0}}}
       }) 
     end
   end  

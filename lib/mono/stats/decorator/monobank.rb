@@ -14,12 +14,16 @@ module Mono
           "%02d" % Time.at(item["time"]).month
         end
 
-        def category
-          mcc_map[item["mcc"]] || item["mcc"]
+        def subcategory
+          mcc_map[item["mcc"]] || item["description"] || item["mcc"]
+        end
+        
+        def amount
+          item["amount"] / 100.0
         end
 
-        def amount
-          item["amount"] / -100.0
+        def category
+          item["mcc"]
         end
 
         def mcc_map
@@ -37,7 +41,6 @@ module Mono
             8999 =>"Novapay",
             5699 =>"Одежда",
             8011 =>"Медецина",
-            4829 =>"Перевод",
             5815 =>"Подписки",
             4900 =>"комуналка",
             5722 =>"Покупки",

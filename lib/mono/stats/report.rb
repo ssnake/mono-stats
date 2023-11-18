@@ -27,33 +27,50 @@ module Mono
       def build_csv
         report = Analyzer
           .new(statements: download)
-          .analyze(columns: [
-            "01", 
-            "02", 
-            "03", 
-            "04", 
-            "05", 
-            "06", 
-            "07", 
-            "08", 
-            "09", 
-            "10", 
-            "11", 
-            "12"]
-          )
+          .analyze(columns: columns)
+         
+        csv = ";;" + columns.join(";")
+        
+        report.sort.each_with_object([csv]) do |pair, result|
+          category = pair.first
 
-        report.each_with_object([]) do |pair, result|
-          row = [pair.first]
-          pair.last.each do |column, value|
-            row << value
+          pair.last.each do |sub_pair|
+            subcategory = sub_pair.first
+            sub_result = [category, subcategory]
+            deb_result = []
+            cred_result = []
+            columns = sub_pair.last
+            columns.each do |column, value|
+              deb_result << value["deb"]
+              cred_result << value["cred"]
+            end
+            result << (sub_result+deb_result).join(";") if deb_result.uniq != [0.0]
+            result << (sub_result+cred_result).join(";") if cred_result.uniq != [0.0]
           end
-          result << row.join(";")
+          
         end.join("\n")
       end
 
       def export_to_csv(filename:)
         FileUtils.mkdir_p(File.dirname(filename))
         File.write(filename, build_csv)
+      end
+
+      def columns
+        [
+          "01", 
+          "02", 
+          "03", 
+          "04", 
+          "05", 
+          "06", 
+          "07", 
+          "08", 
+          "09", 
+          "10", 
+          "11", 
+          "12"
+        ]
       end
     end
   end

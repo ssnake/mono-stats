@@ -11,7 +11,7 @@ report = Mono::Stats::Report
         api_token: ENV['MONO_TOKEN'], 
         account_id: ENV['MONO_ACCOUNT_ID']
       ), 
-    year: 2023
+    year: 2022
   )
 
-report.export_to_csv(filename: 'reports/2023.csv')
+report.export_to_csv(filename: 'reports/2022.csv')
