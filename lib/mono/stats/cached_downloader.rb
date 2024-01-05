@@ -8,7 +8,7 @@ module Mono
   module Stats
     class CachedDownloader < Downloader
       def initialize(pathname:, api_token:, account_id:)
-        super(api_token: api_token, account_id: account_id)
+        super(api_token:, account_id:)
 
         @pathname = pathname
 
@@ -17,29 +17,28 @@ module Mono
 
       def perform_cached_request(from:, to:)
         filename = cached_filename(from:, to:)
-        if File.exists?(filename)
+        if File.exist?(filename)
           File.read(filename)
         else
           response = perform_request(
             from:,
-            to: 
+            to:
           )
           if response.code != '200'
             puts 'unable to download'
-            return nil 
+            return nil
           end
 
-          File.open(filename, 'w') do |f|   
+          File.open(filename, 'w') do |f|
             f.write(response.body)
             response.body
           end
         end
-
       end
-      
+
       def fetch(from:, to:)
         response = perform_cached_request(
-          from: from.to_time.to_i, 
+          from: from.to_time.to_i,
           to: to.to_time.to_i
         )
 
@@ -52,4 +51,3 @@ module Mono
     end
   end
 end
-  

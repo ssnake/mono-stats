@@ -23,15 +23,15 @@ module Mono
           result << downloader.fetch(from:, to:)
         end.flatten
       end
-      
+
       def build_csv
         report = Analyzer
-          .new(statements: download)
-          .analyze(columns: columns)
-         
-        csv = ";;" + columns.join(";")
-        
-        report.sort.each_with_object([csv]) do |pair, result|
+                 .new(statements: download)
+                 .analyze(columns:)
+
+        csv = ";;#{columns.join(';')}"
+
+        body = report.sort.each_with_object([]) do |pair, result|
           category = pair.first
 
           pair.last.each do |sub_pair|
@@ -40,15 +40,18 @@ module Mono
             deb_result = []
             cred_result = []
             columns = sub_pair.last
-            columns.each do |column, value|
-              deb_result << value["deb"]
-              cred_result << value["cred"]
+            columns.each_value do |value|
+              deb_result << value['deb']
+              cred_result << value['cred']
             end
-            result << (sub_result+deb_result).join(";") if deb_result.uniq != [0.0]
-            result << (sub_result+cred_result).join(";") if cred_result.uniq != [0.0]
+            result << (sub_result + deb_result) if deb_result.uniq != [0.0]
+            result << (sub_result + cred_result) if cred_result.uniq != [0.0]
           end
-          
-        end.join("\n")
+        end
+
+        body = Mono::Stats::Sorter.sort(body)
+
+        "#{csv}\n#{body.map { |row| row.join(';') }.join("\n")}"
       end
 
       def export_to_csv(filename:)
@@ -57,22 +60,21 @@ module Mono
       end
 
       def columns
-        [
-          "01", 
-          "02", 
-          "03", 
-          "04", 
-          "05", 
-          "06", 
-          "07", 
-          "08", 
-          "09", 
-          "10", 
-          "11", 
-          "12"
+        %w[
+          01
+          02
+          03
+          04
+          05
+          06
+          07
+          08
+          09
+          10
+          11
+          12
         ]
       end
     end
   end
 end
-  
