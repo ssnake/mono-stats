@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Mono::Stats::Analyzer do
-  let(:analyzer) { described_class.new(only_expenses: false) }
+  let(:analyzer) { described_class.new(only_expenses:) }
+  let(:only_expenses) { false }
 
   describe '#analyze' do
     subject { analyzer.analyze(statements:, columns: %w[01 02 06 10 11]) }
@@ -97,6 +98,21 @@ RSpec.describe Mono::Stats::Analyzer do
           'originalMcc' => 5812,
           'receiptId' => 'TMBE-7B22-8TX4-7EEE',
           'time' => 1_685_884_434
+        },
+        {
+          'amount' => 100,
+          'balance' => 612_660,
+          'cashbackAmount' => 0,
+          'commissionRate' => 0,
+          'currencyCode' => 980,
+          'description' => 'La Fit Bakery',
+          'hold' => true,
+          'id' => 'TH3kee15g3zU6c_LOA',
+          'mcc' => 5812,
+          'operationAmount' => -37_800,
+          'originalMcc' => 5812,
+          'receiptId' => 'TMBE-7B22-8TX4-7EEE',
+          'time' => 1_685_884_434
         }
 
       ]
@@ -107,7 +123,7 @@ RSpec.describe Mono::Stats::Analyzer do
                           4816 => { 'Paypal' => { '01' => { 'cred' => 0.0, 'deb' => 0.0 }, '02' => { 'cred' => 0.0, 'deb' => 0.0 },
                                                   '06' => { 'cred' => 0.0, 'deb' => 0.0 }, '10' => { 'cred' => -634.13, 'deb' => 0.0 }, '11' => { 'cred' => 0.0, 'deb' => 0.0 } } },
                           5812 => { 'Кафе' => { '01' => { 'cred' => 0.0, 'deb' => 0.0 }, '02' => { 'cred' => 0.0, 'deb' => 0.0 },
-                                                '06' => { 'cred' => -178.0, 'deb' => 0.0 }, '10' => { 'cred' => -378.0, 'deb' => 0.0 }, '11' => { 'cred' => 0.0, 'deb' => 0.0 } } },
+                                                '06' => { 'cred' => -178.0, 'deb' => 1.0 }, '10' => { 'cred' => -378.0, 'deb' => 0.0 }, '11' => { 'cred' => 0.0, 'deb' => 0.0 } } },
                           5818 => {
                             'Preply' => { '01' => { 'cred' => 0.0, 'deb' => 0.0 }, '02' => { 'cred' => 0.0, 'deb' => 0.0 },
                                           '06' => { 'cred' => -5574.61, 'deb' => 0.0 }, '10' => { 'cred' => 0.0, 'deb' => 0.0 }, '11' => { 'cred' => 0.0, 'deb' => 0.0 } },
@@ -115,6 +131,25 @@ RSpec.describe Mono::Stats::Analyzer do
                                            '06' => { 'cred' => -5574.61, 'deb' => 0.0 }, '10' => { 'cred' => 0.0, 'deb' => 0.0 }, '11' => { 'cred' => 0.0, 'deb' => 0.0 } }
                           }
                         })
+    end
+
+    context 'when only_expenses is true' do
+      let(:only_expenses) { true }
+
+      it do
+        is_expected.to eq({
+                            4816 => { 'Paypal' => { '01' => { 'cred' => 0.0, 'deb' => 0.0 }, '02' => { 'cred' => 0.0, 'deb' => 0.0 },
+                                                    '06' => { 'cred' => 0.0, 'deb' => 0.0 }, '10' => { 'cred' => -634.13, 'deb' => 0.0 }, '11' => { 'cred' => 0.0, 'deb' => 0.0 } } },
+                            5812 => { 'Кафе' => { '01' => { 'cred' => 0.0, 'deb' => 0.0 }, '02' => { 'cred' => 0.0, 'deb' => 0.0 },
+                                                  '06' => { 'cred' => -178.0, 'deb' => 0.0 }, '10' => { 'cred' => -378.0, 'deb' => 0.0 }, '11' => { 'cred' => 0.0, 'deb' => 0.0 } } },
+                            5818 => {
+                              'Preply' => { '01' => { 'cred' => 0.0, 'deb' => 0.0 }, '02' => { 'cred' => 0.0, 'deb' => 0.0 },
+                                            '06' => { 'cred' => -5574.61, 'deb' => 0.0 }, '10' => { 'cred' => 0.0, 'deb' => 0.0 }, '11' => { 'cred' => 0.0, 'deb' => 0.0 } },
+                              'Preply2' => { '01' => { 'cred' => 0.0, 'deb' => 0.0 }, '02' => { 'cred' => 0.0, 'deb' => 0.0 },
+                                             '06' => { 'cred' => -5574.61, 'deb' => 0.0 }, '10' => { 'cred' => 0.0, 'deb' => 0.0 }, '11' => { 'cred' => 0.0, 'deb' => 0.0 } }
+                            }
+                          })
+      end
     end
   end
 end

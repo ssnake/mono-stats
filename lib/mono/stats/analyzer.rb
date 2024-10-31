@@ -7,7 +7,7 @@ module Mono
     class Analyzer
       attr_reader :only_expenses
 
-      def initialize(only_expenses: true)
+      def initialize(only_expenses: false)
         @only_expenses = only_expenses
       end
 
@@ -18,6 +18,7 @@ module Mono
           statement = Decorator::Monobank.new(item:)
 
           next unless columns.include?(statement.column)
+          next if only_expenses && statement.amount > 0.0
 
           result[statement.category] ||= {}
           result[statement.category][statement.subcategory] ||= {}
