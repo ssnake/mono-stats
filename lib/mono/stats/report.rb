@@ -7,28 +7,15 @@ require 'json'
 module Mono
   module Stats
     class Report
-      attr_reader :downloader, :year
+      attr_reader :downloader, :year, :analyzer
 
-      def initialize(downloader:, year:)
+      def initialize(downloader:, analyzer:, year:)
         @downloader = downloader
         @year = year
-      end
-
-      def download
-        (1..12).each_with_object([]) do |month, result|
-          from = DateTime.new(year, month, 1, 0, 0, 0)
-          to = DateTime.new(year, month, Date.new(year, month, -1).day, 23, 59, 59)
-
-          puts "Fetching data for #{year} #{month}"
-          result << downloader.fetch(from:, to:)
-        end.flatten
+        @analyzer = analyzer
       end
 
       def build_csv
-        report = Analyzer
-                 .new(statements: download)
-                 .analyze(columns:)
-
         csv = ";;#{columns.join(';')}"
 
         body = report.sort.each_with_object([]) do |pair, result|
@@ -57,6 +44,23 @@ module Mono
       def export_to_csv(filename:)
         FileUtils.mkdir_p(File.dirname(filename))
         File.write(filename, build_csv)
+      end
+
+      private
+
+      def download
+        (1..12).each_with_object([]) do |month, result|
+          from = DateTime.new(year, month, 1, 0, 0, 0)
+          to = DateTime.new(year, month, Date.new(year, month, -1).day, 23, 59, 59)
+
+          puts "Fetching data for #{year} #{month}"
+          result << downloader.fetch(from:, to:)
+          sleep 61
+        end.flatten
+      end
+
+      def report
+        @report ||= analyzer.analyze(statements: download, columns:)
       end
 
       def columns

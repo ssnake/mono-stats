@@ -3,8 +3,9 @@
 require 'fileutils'
 
 RSpec.describe Mono::Stats::Report do
-  let(:report) { described_class.new(downloader:, year:) }
+  let(:report) { described_class.new(downloader:, analyzer:, year:) }
   let(:downloader) { instance_double('downloader') }
+  let(:analyzer) { Mono::Stats::Analyzer.new(only_expenses: false) }
   let(:year) { 2023 }
   let(:downloaded_result) do
     [
@@ -72,7 +73,7 @@ RSpec.describe Mono::Stats::Report do
   end
 
   before do
-    expect(downloader).to receive(:fetch).exactly(12).times.and_return(downloaded_result)
+    expect(report).to receive(:download).and_return(downloaded_result)
   end
 
   describe '#build_csv' do
@@ -82,8 +83,8 @@ RSpec.describe Mono::Stats::Report do
       is_expected.to eq(
         <<~EOS.strip
           ;;01;02;03;04;05;06;07;08;09;10;11;12
-          4816;Paypal;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;-7609.56;0.0;0.0
-          5812;Кафе;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;-4536.0;-2136.0;0.0
+          4816;Paypal;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;-634.13;0.0;0.0
+          5812;Кафе;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;-378.0;-178.0;0.0
         EOS
       )
     end
@@ -104,8 +105,8 @@ RSpec.describe Mono::Stats::Report do
       expect(File.read(temp_file)).to eq(
         <<~EOS.strip
           ;;01;02;03;04;05;06;07;08;09;10;11;12
-          4816;Paypal;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;-7609.56;0.0;0.0
-          5812;Кафе;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;-4536.0;-2136.0;0.0
+          4816;Paypal;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;-634.13;0.0;0.0
+          5812;Кафе;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;-378.0;-178.0;0.0
         EOS
       )
     end

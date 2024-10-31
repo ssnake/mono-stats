@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Mono::Stats::Analyzer do
-  let(:analyzer) { described_class.new(statements:) }
+  let(:analyzer) { described_class.new(only_expenses: false) }
 
   describe '#analyze' do
-    subject { analyzer.analyze(columns: %w[01 02 06 10 11]) }
+    subject { analyzer.analyze(statements:, columns: %w[01 02 06 10 11]) }
 
     let(:statements) do
       [
@@ -110,7 +110,9 @@ RSpec.describe Mono::Stats::Analyzer do
                                                 '06' => { 'cred' => -178.0, 'deb' => 0.0 }, '10' => { 'cred' => -378.0, 'deb' => 0.0 }, '11' => { 'cred' => 0.0, 'deb' => 0.0 } } },
                           5818 => {
                             'Preply' => { '01' => { 'cred' => 0.0, 'deb' => 0.0 }, '02' => { 'cred' => 0.0, 'deb' => 0.0 },
-                                          '06' => { 'cred' => -5574.61, 'deb' => 0.0 }, '10' => { 'cred' => 0.0, 'deb' => 0.0 }, '11' => { 'cred' => 0.0, 'deb' => 0.0 } }, 'Preply2' => { '01' => { 'cred' => 0.0, 'deb' => 0.0 }, '02' => { 'cred' => 0.0, 'deb' => 0.0 }, '06' => { 'cred' => -5574.61, 'deb' => 0.0 }, '10' => { 'cred' => 0.0, 'deb' => 0.0 }, '11' => { 'cred' => 0.0, 'deb' => 0.0 } }
+                                          '06' => { 'cred' => -5574.61, 'deb' => 0.0 }, '10' => { 'cred' => 0.0, 'deb' => 0.0 }, '11' => { 'cred' => 0.0, 'deb' => 0.0 } },
+                            'Preply2' => { '01' => { 'cred' => 0.0, 'deb' => 0.0 }, '02' => { 'cred' => 0.0, 'deb' => 0.0 },
+                                           '06' => { 'cred' => -5574.61, 'deb' => 0.0 }, '10' => { 'cred' => 0.0, 'deb' => 0.0 }, '11' => { 'cred' => 0.0, 'deb' => 0.0 } }
                           }
                         })
     end
