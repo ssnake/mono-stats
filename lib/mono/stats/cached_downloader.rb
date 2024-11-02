@@ -32,7 +32,7 @@ module Mono
             return nil
           end
 
-          sleep cooldown if cooldown.positive?
+          sleep cooldown if cooldown&.positive?
 
           File.open(filename, 'w') do |f|
             f.write(response.body)

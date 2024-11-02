@@ -14,7 +14,8 @@ report = Mono::Stats::Report
                account_id: ENV['MONO_ACCOUNT_ID'],
                cooldown: 61
              ),
-           analyzer: Mono::Stats::Analyzer.new(only_expenses: true),
+           analyzer: Mono::Stats::Analyzer
+            .new(only_expenses: true),
            year: 2024
          )
 
