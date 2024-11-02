@@ -5,17 +5,18 @@ require_relative 'decorator/monobank'
 module Mono
   module Stats
     class Analyzer
-      attr_reader :only_expenses
+      attr_reader :only_expenses, :decorator
 
-      def initialize(only_expenses: false)
+      def initialize(only_expenses: false, decorator: Decorator::Monobank)
         @only_expenses = only_expenses
+        @decorator = decorator
       end
 
       def analyze(statements:, columns:)
         statements.each_with_object({}) do |item, result|
           next if item.nil?
 
-          statement = Decorator::Monobank.new(item:)
+          statement = decorator.new(item:)
 
           next unless columns.include?(statement.column)
           next if only_expenses && statement.amount > 0.0
