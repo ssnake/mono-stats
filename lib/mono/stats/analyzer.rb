@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'decorator/monobank'
-
 module Mono
   module Stats
     class Analyzer

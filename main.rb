@@ -15,7 +15,10 @@ report = Mono::Stats::Report
                cooldown: 61
              ),
            analyzer: Mono::Stats::Analyzer
-            .new(only_expenses: true),
+            .new(
+              only_expenses: true,
+              decorator: Mono::Stats::Decorator::MonobankMcc
+            ),
            year: 2024
          )
 

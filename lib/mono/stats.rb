@@ -6,6 +6,8 @@ require_relative 'stats/cached_downloader'
 require_relative 'stats/analyzer'
 require_relative 'stats/report'
 require_relative 'stats/sorter'
+require_relative 'stats/decorator/monobank'
+require_relative 'stats/decorator/monobank_mcc'
 
 module Mono
   module Stats
