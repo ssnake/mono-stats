@@ -7,10 +7,13 @@ require 'fileutils'
 module Mono
   module Stats
     class CachedDownloader < Downloader
-      def initialize(pathname:, api_token:, account_id:)
+      attr_reader :cooldown
+
+      def initialize(pathname:, api_token:, account_id:, cooldown: nil)
         super(api_token:, account_id:)
 
         @pathname = pathname
+        @cooldown = cooldown
 
         FileUtils.mkdir_p(pathname)
       end
@@ -29,6 +32,8 @@ module Mono
             return nil
           end
 
+          sleep cooldown if cooldown.positive?
+
           File.open(filename, 'w') do |f|
             f.write(response.body)
             response.body
@@ -46,6 +51,8 @@ module Mono
       end
 
       def cached_filename(from:, to:)
+        from = Time.at(from).strftime('%Y-%m-%d')
+        to = Time.at(to).strftime('%Y-%m-%d')
         File.join(@pathname, "#{@account_id}_#{from}_#{to}.txt")
       end
     end

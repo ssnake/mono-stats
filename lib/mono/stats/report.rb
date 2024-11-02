@@ -18,7 +18,7 @@ module Mono
       def build_csv
         csv = ";;#{columns.join(';')}"
 
-        body = report.sort.each_with_object([]) do |pair, result|
+        body = report.each_with_object([]) do |pair, result|
           category = pair.first
 
           pair.last.each do |sub_pair|
@@ -55,7 +55,6 @@ module Mono
 
           puts "Fetching data for #{year} #{month}"
           result << downloader.fetch(from:, to:)
-          sleep 61
         end.flatten
       end
 

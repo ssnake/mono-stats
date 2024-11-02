@@ -15,7 +15,7 @@ module Mono
         end
 
         def subcategory
-          mcc_map[item['mcc']] || item['description'] || item['mcc']
+          item['description'] || item['mcc']
         end
 
         def amount
@@ -23,11 +23,12 @@ module Mono
         end
 
         def category
-          item['mcc']
+          mcc_map[item['mcc']] || item['mcc']
         end
 
         def mcc_map
           {
+            4829 => 'Переказ коштів',
             5411 =>	'Продукты',
             5814 => 'Кафе',
             5541 => 'Заправка',
